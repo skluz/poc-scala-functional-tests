@@ -1,4 +1,4 @@
-name := "utf"
+name := "functional-tests-in-scala"
 
 lazy val commonSettings = Seq(
   version := "0.1",
@@ -18,17 +18,17 @@ lazy val versions = new {
   val Selenium = "3.5.3"
 }
 
-lazy val `utf` = (project in file("."))
+lazy val `functional-tests-in-scala` = (project in file("."))
   .aggregate(`commons`)
   .aggregate(`commons-api`)
-  .aggregate(`commons-web`)
-  .aggregate(`commons-perf`)
   .aggregate(`commons-mock`)
+  .aggregate(`commons-perf`)
+  .aggregate(`commons-web`)
   .aggregate(`petstore`)
   .aggregate(`petstore-api-tests`)
   .aggregate(`petstore-mock`)
-  .aggregate(`petstore-web-tests`)
   .aggregate(`petstore-perf-tests`)
+  .aggregate(`petstore-web-tests`)
 
 lazy val `commons` = project
   .settings(commonSettings: _*)
@@ -38,7 +38,11 @@ lazy val `commons` = project
     "com.typesafe.scala-logging" %% "scala-logging" % versions.ScalaLogging,
     "org.scalatest" %% "scalatest" % versions.ScalaTest % Test,
     "com.squareup.okhttp3" % "okhttp" % versions.OkHttp,
-    "com.squareup.moshi" % "moshi" % versions.Moshi
+    "com.squareup.moshi" % "moshi" % versions.Moshi,
+    "com.jsoniter" % "jsoniter" % "0.9.15",
+    "com.bluelinelabs" % "logansquare" % "1.3.7",
+    "com.fasterxml.jackson.module" % "jackson-module-scala_2.12" % "2.9.0",
+    "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % "2.9.0"
   ))
 
 lazy val `commons-api` = project

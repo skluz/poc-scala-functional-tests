@@ -1,6 +1,6 @@
-package utf.commons.api
+package com.funtis.commons.api.test
 
-import utf.commons.BaseSuite
+import com.funtis.commons.test.BaseSuite
 
 /**
   * Created by Sławomir Kluz on 12/08/2017.

@@ -1,6 +1,6 @@
-package petstore.api.tests
+package com.funtis.petstore.api.tests
 
-import utf.commons.api.BaseApiSuite
+import com.funtis.commons.api.test.BaseApiSuite
 
 /**
   * Created by Sławomir Kluz on 12/08/2017.

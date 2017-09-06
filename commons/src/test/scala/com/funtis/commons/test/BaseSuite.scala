@@ -1,7 +1,7 @@
-package utf.commons
+package com.funtis.commons.test
 
 import com.typesafe.scalalogging.LazyLogging
-import org.scalatest.{BeforeAndAfter, BeforeAndAfterAll, FlatSpec, Outcome}
+import org.scalatest.{BeforeAndAfterAll, FlatSpec, Outcome}
 import org.slf4j.MDC
 
 /**

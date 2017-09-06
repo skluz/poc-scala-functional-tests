@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="SIFT_APPENDER" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <key>suiteId</key>
+            <defaultValue>output</defaultValue>
+        </discriminator>
+        <sift>
+            <appender name="FILE-${suiteId}" class="ch.qos.logback.core.FileAppender">
+                <file>./target/results/logs/${suiteId}.log</file>
+                <append>false</append>
+                <encoder>
+                    <pattern>%d{HH:mm:ss.SSS} %-5level %msg%n</pattern>
+                </encoder>
+            </appender>
+        </sift>
+    </appender>
+
+    <appender name="CONSOLE_APPENDER" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>info</level>
+        </filter>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="SIFT_APPENDER"/>
+        <appender-ref ref="CONSOLE_APPENDER"/>
+    </root>
+
+</configuration>

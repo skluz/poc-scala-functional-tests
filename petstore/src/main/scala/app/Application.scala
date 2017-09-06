@@ -3,9 +3,10 @@ package app
 import java.time.{Instant, ZoneOffset}
 import java.time.format.DateTimeFormatter
 
+import com.funtis.commons.json.{JSONJsoniterParser, JSONLogansquareParser, JSONParser}
 import com.squareup.moshi.{JsonAdapter, Moshi, ToJson}
 import com.typesafe.scalalogging.LazyLogging
-import model.Person
+import model.{Address, Person}
 import okhttp3.{HttpUrl, MediaType, Request, RequestBody}
 
 /**
@@ -16,11 +17,13 @@ object Application extends App with LazyLogging {
 //  val url = HttpUrl.parse("https://httpbin.org/post").newBuilder().addPathSegment("api").build()
 //  val request = new Request.Builder().url(url).post(JsonBody.create(Person("Stefan", 10))).build()
 
-  val any = Person("Stefan", 10, Instant.now())
-  val moshi = new Moshi.Builder().build()
-  val str = moshi.adapter(classOf[Any]).toJson(any)
+  val any = Person("Stefan", None, null, 10, Instant.now(), Seq("a", "b", "c"), Address(false, Map("a" -> "b", 3 -> "a")))
+  val str = JSONParser.default.toJSON(any)
 
   logger.info(str)
+
+  val person = JSONParser.default.fromJSON("{\"firstName\":\"Stefan\",\"birthDate\":\"2017-09-06T21:53:02.502Z\",\"list\":[\"a\",\"b\",\"c\"],\"address\":{\"active\":false,\"data\":{\"a\":\"b\",\"3\":\"a\"}}}", classOf[Person])
+  logger.info(person.toString)
 
 }
 
