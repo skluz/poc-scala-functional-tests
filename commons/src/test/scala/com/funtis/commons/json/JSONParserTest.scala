@@ -69,8 +69,8 @@ class JSONParserTest extends FlatSpec with Matchers with LazyLogging {
     parser.fromJSON("""{"number":1,"string":null}""", classOf[NullCase]) shouldBe NullCase(1, null)
   }
 
-  it should "handle Options" in {
-    parser.fromJSON("""{"number":1}""", classOf[NullOptionCase]) shouldBe NullOptionCase(1, None)
+  it should "handle null Options property" in {
+    parser.fromJSON("""{"number":1,"option":null}""", classOf[NullOptionCase]) shouldBe NullOptionCase(1, None)
   }
 
   it should "fail on missing properties" in {

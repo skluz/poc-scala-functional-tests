@@ -9,9 +9,10 @@ trait JSONParser {
   def toJSON(any: Any): String
   def fromJSON[T](json: String, cls: Class[T]): T
   def fromJSON[T: ClassTag](json: String): T
+  def fromJSON[T](json: String, parametrized: Class[_], parameterClasses: Class[_]): T
 }
 
 object JSONParser {
-  val default = jackson
-  lazy val jackson = new JSONJacksonParser
+  lazy val default: JSONParser = jackson
+  lazy val jackson: JSONParser = new JSONJacksonParser
 }
