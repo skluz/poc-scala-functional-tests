@@ -1,12 +1,12 @@
 package com.funtis.commons.json
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include
-import com.fasterxml.jackson.core.JsonGenerator
-import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider
-import com.fasterxml.jackson.databind.ser.{PropertyFilter, PropertyWriter}
-import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper, SerializationFeature, SerializerProvider}
+import com.fasterxml.jackson.core.`type`.TypeReference
+import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper, SerializationFeature}
+import com.fasterxml.jackson.module.scala.DefaultScalaModule
+import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
+
+import scala.reflect.{classTag, _}
 
 /**
   * Created by Sławomir Kluz on 06/09/2017.
@@ -18,33 +18,26 @@ class JSONJacksonParser extends JSONParser {
 
   // dates will be serialized to ISO-8601 formatted string
   mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-  // deserialization will fail if property not defined in model occurs
+  // deserialization will fail if new property (not defined in model) occurs
   mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true)
+  // deserialization will fail if model property is missing
+  mapper.configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, true)
 
-  // nulls or Nones will be skipped
-  mapper.setSerializationInclusion(Include.CUSTOM)
-
-  val filterProvider = new SimpleFilterProvider().addFilter("NullFilter", new NullFilter())
-  mapper.setFilterProvider(filterProvider)
+  // nulls or Nones will be skipped in serialized string
+  mapper.setSerializationInclusion(Include.NON_ABSENT)
 
   override def toJSON(any: Any): String = {
     mapper.writeValueAsString(any)
   }
-  override def fromJSON[T](json: String, cls: Class[T]) = {
+  override def fromJSON[T](json: String, cls: Class[T]): T = {
     mapper.readValue(json, cls)
   }
-}
 
-class NullFilter extends PropertyFilter {
-  @Deprecated
-  override def depositSchemaProperty(writer: PropertyWriter, propertiesNode: ObjectNode, provider: SerializerProvider) = writer.depositSchemaProperty(propertiesNode, provider)
-  override def serializeAsField(pojo: scala.Any, gen: JsonGenerator, prov: SerializerProvider, writer: PropertyWriter) = {
-    print(pojo.getClass)
-    if(pojo.isInstanceOf[Option[_]]) {
-    } else {
-      writer.serializeAsField(pojo, gen, prov)
-    }
+  override def fromJSON[T: ClassTag](json: String): T = {
+    fromJSON(json, classTag[T].runtimeClass).asInstanceOf[T]
   }
-  override def depositSchemaProperty(writer: PropertyWriter, objectVisitor: JsonObjectFormatVisitor, provider: SerializerProvider) = writer.depositSchemaProperty(objectVisitor, provider)
-  override def serializeAsElement(elementValue: scala.Any, gen: JsonGenerator, prov: SerializerProvider, writer: PropertyWriter) = writer.serializeAsElement(elementValue, gen, prov)
+
+  def fromJSON[T](json: String, parametrized: Class[_], parameterClasses: Class[_]): T = {
+    mapper.readValue[T](json, mapper.getTypeFactory.constructParametricType(parametrized, parameterClasses))
+  }
 }

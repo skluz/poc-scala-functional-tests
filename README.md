@@ -9,4 +9,5 @@
 * logging
     * logback.xml for api, web, perf - sbt + intellij
 * .gitignore
-* sbt jenkins configurable targets 
+* sbt jenkins configurable targets
+* null/None in jackson

@@ -13,7 +13,7 @@ lazy val versions = new {
   val ScalaLogging = "3.7.2"
   val ScalaTest = "3.0.1"
   val OkHttp = "3.8.1"
-  val Moshi = "1.5.0"
+  val Jackson = "2.9.0"
   val Gatling = "2.3.0"
   val Selenium = "3.5.3"
 }
@@ -38,11 +38,8 @@ lazy val `commons` = project
     "com.typesafe.scala-logging" %% "scala-logging" % versions.ScalaLogging,
     "org.scalatest" %% "scalatest" % versions.ScalaTest % Test,
     "com.squareup.okhttp3" % "okhttp" % versions.OkHttp,
-    "com.squareup.moshi" % "moshi" % versions.Moshi,
-    "com.jsoniter" % "jsoniter" % "0.9.15",
-    "com.bluelinelabs" % "logansquare" % "1.3.7",
-    "com.fasterxml.jackson.module" % "jackson-module-scala_2.12" % "2.9.0",
-    "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % "2.9.0"
+    "com.fasterxml.jackson.module" % "jackson-module-scala_2.12" % versions.Jackson,
+    "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % versions.Jackson
   ))
 
 lazy val `commons-api` = project
