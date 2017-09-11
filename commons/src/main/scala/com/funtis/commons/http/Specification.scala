@@ -1,8 +1,14 @@
 package com.funtis.commons.http
 
 /**
-  * Created by Sławomir Kluz on 07/09/2017.
+  * Created by Sławomir Kluz on 11/09/2017.
   */
-class Specification {
+case class Specification(
+  baseUri: String = "http://localhost:3006",
+  basePath: String = "/",
+  headers: Headers = Headers(Seq(Header("Content-Type", "application/json; charset=utf-8"), Header("Accept", "application/json")))
+)
 
+object Specification {
+  lazy val default = Specification()
 }

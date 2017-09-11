@@ -26,6 +26,7 @@ lazy val `functional-tests-in-scala` = (project in file("."))
   .aggregate(`commons-web`)
   .aggregate(`petstore`)
   .aggregate(`petstore-api-tests`)
+  .aggregate(`petstore-app`)
   .aggregate(`petstore-mock`)
   .aggregate(`petstore-perf-tests`)
   .aggregate(`petstore-web-tests`)
@@ -72,6 +73,9 @@ lazy val `petstore` = project
 lazy val `petstore-api-tests` = project
   .settings(commonSettings: _*)
   .dependsOn(`petstore`, `commons-api` % "compile->compile;test->test")
+
+lazy val `petstore-app` = project
+  .settings(commonSettings: _*)
 
 lazy val `petstore-mock` = project
   .settings(commonSettings: _*)

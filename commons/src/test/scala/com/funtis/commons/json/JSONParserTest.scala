@@ -8,11 +8,11 @@ import com.typesafe.scalalogging.LazyLogging
 import org.scalatest.{FlatSpec, Matchers}
 
 /**
-  * Created by skluz@g2a.com on 07/09/2017.
+  * Created by Sławomir Kluz on 07/09/2017.
   */
 class JSONParserTest extends FlatSpec with Matchers with LazyLogging {
 
-  val parser = JSONParser.jackson
+  val parser: JSONParser = JSONParser.jackson
 
   behavior of "serialization"
 
@@ -105,11 +105,11 @@ case class MapCase(number: Int, map: Map[Any, Any])
 case class NestedCase(number: Int, nested: NullCase)
 case class GenericSequenceCase[T](data: Seq[T])
 case class EnumCase(
-  @JsonScalaEnumeration(classOf[YesNoTypeReference]) value: YesNo.YesNo
+  @JsonScalaEnumeration(classOf[YesNoTypeReference]) value: YesNo.YesNoType
 )
 
 object YesNo extends Enumeration {
-  type YesNo = Value
+  type YesNoType = Value
   val Yes, No = Value
 }
 

@@ -26,6 +26,7 @@ private class JSONJacksonParser extends JSONParser {
   override def toJSON(any: Any): String = {
     mapper.writeValueAsString(any)
   }
+
   override def fromJSON[T](json: String, cls: Class[T]): T = {
     mapper.readValue(json, cls)
   }
