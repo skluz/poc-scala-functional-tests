@@ -16,6 +16,7 @@ lazy val versions = new {
   val Jackson = "2.9.0"
   val Gatling = "2.3.0"
   val Selenium = "3.5.3"
+  val SpringBoot = "1.5.6.RELEASE"
 }
 
 lazy val `functional-tests-in-scala` = (project in file("."))
@@ -76,6 +77,12 @@ lazy val `petstore-api-tests` = project
 
 lazy val `petstore-app` = project
   .settings(commonSettings: _*)
+  .settings(libraryDependencies ++= Seq(
+    "org.springframework.boot" % "spring-boot-starter-web" % versions.SpringBoot,
+    "org.springframework.boot" % "spring-boot-starter-data-jpa" % versions.SpringBoot,
+    "org.springframework.boot" % "spring-boot-starter-actuator" % versions.SpringBoot,
+    "com.h2database" % "h2" % "1.4.195"
+  ))
 
 lazy val `petstore-mock` = project
   .settings(commonSettings: _*)

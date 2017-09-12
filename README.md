@@ -6,7 +6,10 @@
 * None and null are skipped
 
 ##### ToDo
-* logging
-    * logback.xml for api, web, perf - sbt + intellij
-* .gitignore
-* sbt jenkins configurable targets
+- [ ] Logging: logback.xml for api, web, perf - sbt + intellij
+- [ ] Document all maintainer processes (triage, release, etc.)
+- [ ] sbt jenkins configurable targets
+
+## License
+
+See the [LICENSE](LICENSE.md) file for license rights and limitations (MIT).
