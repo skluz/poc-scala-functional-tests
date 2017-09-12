@@ -1,16 +1,19 @@
 package com.funtis.petstore.app.domain;
 
-import org.springframework.beans.factory.annotation.Required;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by Sławomir Kluz on 12/09/2017.
  */
 @Entity
-public class Pet {
+public class Pet extends AbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -30,6 +33,11 @@ public class Pet {
     @NotNull
     @Column
     private PetStatus status;
+
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private Instant created;
+
 
     public Pet() {
 
@@ -80,5 +88,13 @@ public class Pet {
 
     public void setTags(List<Tag> tags) {
         this.tags = tags;
+    }
+
+    public Instant getCreated() {
+        return created;
+    }
+
+    public void setCreated(Instant created) {
+        this.created = created;
     }
 }

@@ -1,6 +1,7 @@
 package com.funtis.petstore.app.repository;
 
 import com.funtis.petstore.app.domain.Pet;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;

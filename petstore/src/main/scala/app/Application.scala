@@ -12,6 +12,12 @@ import model.{Address, Person}
 object Application extends App with LazyLogging {
 
   val body = Person("Stefan", None, null, 10, Instant.now(), Seq("a", "b", "c"), Address(false, Map("a" -> "b", 3 -> "a")))
-  val restClient = new RestClient().tag("test").pathParam("gameId", 1).Get("/games/{gameId}").assertCode(200).body.as(classOf[Person])
+
+  val restClient = new RestClient()
+    .tag("test")
+    .pathParam("gameId", 1)
+    .Get("/games/{gameId}")
+    .assertCode(200)
+      .body.as(classOf[Person])
 
 }
