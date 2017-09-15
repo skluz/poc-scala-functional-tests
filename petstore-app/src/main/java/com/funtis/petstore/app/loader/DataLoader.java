@@ -1,9 +1,9 @@
 package com.funtis.petstore.app.loader;
 
-import com.funtis.petstore.app.domain.Category;
-import com.funtis.petstore.app.domain.Pet;
-import com.funtis.petstore.app.domain.PetStatus;
-import com.funtis.petstore.app.domain.Tag;
+import com.funtis.petstore.app.model.Category;
+import com.funtis.petstore.app.model.Pet;
+import com.funtis.petstore.app.model.PetStatus;
+import com.funtis.petstore.app.model.Tag;
 import com.funtis.petstore.app.repository.CategoryRepository;
 import com.funtis.petstore.app.repository.PetRepository;
 import com.funtis.petstore.app.repository.TagRepository;

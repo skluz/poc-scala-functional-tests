@@ -1,8 +1,9 @@
 package com.funtis.petstore.app.controller;
 
-import com.funtis.petstore.app.domain.Pet;
+import com.funtis.petstore.app.model.Pet;
 import com.funtis.petstore.app.exceptions.ResourceNotFoundException;
 import com.funtis.petstore.app.repository.PetRepository;
+import com.funtis.petstore.app.services.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,24 +14,21 @@ import org.springframework.web.bind.annotation.*;
 public class PetController {
 
     @Autowired
-    private PetRepository petRepository;
+    private PetService petService;
 
     @GetMapping("/pets")
-    public Iterable<Pet> findAll() {
-        return petRepository.findAll();
+    public Iterable<Pet> listPets() {
+        return petService.listPets();
     }
 
     @GetMapping("/pet/{petId}")
-    public Pet find(@PathVariable Long petId) {
-        Pet pet = petRepository.findOne(petId);
-        if(pet == null) throw new ResourceNotFoundException("Pet with id: " + petId + " doesn't exist");
-        return pet;
+    public Pet getPet(@PathVariable Long petId) {
+        return petService.getPet(petId);
     }
 
     @PostMapping("/pets")
-    public Pet save(@RequestBody Pet pet) {
-        Pet created = petRepository.save(pet);
-        return petRepository.findOne(created.getId());
+    public Pet createPet(@RequestBody Pet pet) {
+        return petService.createPet(pet);
     }
 
 }

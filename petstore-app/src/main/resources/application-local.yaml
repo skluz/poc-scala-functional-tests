@@ -1,0 +1,31 @@
+server:
+  port: 8080
+
+management:
+  port: 8081
+  address: 127.0.0.1
+  security.enabled: false
+
+spring:
+  profile: local
+  datasource:
+    url: jdbc:h2:mem:AZ;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+#      hibernate.show_sql: true
+#      hibernate.use_sql_comments: true
+#      hibernate.format_sql: true
+#      hibernate.type: trace
+      javax.persistence.schema-generation.create-source: metadata
+      javax.persistence.schema-generation.scripts.action: create
+      javax.persistence.schema-generation.scripts.create-target: db-schema.sql
+  jackson.serialization:
+    WRITE_DATES_AS_TIMESTAMPS: false
+
+logging:
+  level.org.hibernate.SQL: DEBUG
+  level.org.hibernate.type.descriptor.sql.BasicBinder: TRACE

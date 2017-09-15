@@ -1,43 +1,38 @@
-package com.funtis.petstore.app.domain;
-
-import org.springframework.data.annotation.CreatedDate;
+package com.funtis.petstore.app.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.List;
 
 /**
  * Created by Sławomir Kluz on 12/09/2017.
  */
 @Entity
+@Table(name = "pets")
 public class Pet extends AbstractEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     @NotNull
     private String name;
 
     @OneToOne
-    @NotNull
+    @JoinColumn(nullable = false, foreignKey = @ForeignKey(name = "pets_categories_fk"))
     private Category category;
 
     @ManyToMany
+    @JoinTable(
+            joinColumns = @JoinColumn(foreignKey = @ForeignKey(name = "pets_tags_pets_fk")),
+            inverseForeignKey = @ForeignKey(name = "pets_tags_tags_fk")
+    )
     private List<Tag> tags;
 
+    @Column(nullable = false)
     @NotNull
-    @Column
     private PetStatus status;
-
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private Instant created;
-
 
     public Pet() {
 
@@ -52,10 +47,6 @@ public class Pet extends AbstractEntity {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -90,11 +81,4 @@ public class Pet extends AbstractEntity {
         this.tags = tags;
     }
 
-    public Instant getCreated() {
-        return created;
-    }
-
-    public void setCreated(Instant created) {
-        this.created = created;
-    }
 }

@@ -1,9 +1,7 @@
 package com.funtis.petstore.app.repository;
 
-import com.funtis.petstore.app.domain.Category;
-import com.funtis.petstore.app.domain.Pet;
+import com.funtis.petstore.app.model.Category;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Service;
 
 /**

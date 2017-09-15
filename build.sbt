@@ -82,6 +82,7 @@ lazy val `petstore-app` = project
     "org.springframework.boot" % "spring-boot-starter-data-jpa" % versions.SpringBoot,
     "org.springframework.boot" % "spring-boot-starter-actuator" % versions.SpringBoot,
     "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % versions.Jackson,
+    "org.jadira.usertype" % "usertype.extended" % "5.0.0.GA",
     "com.h2database" % "h2" % "1.4.195"
   ))
 

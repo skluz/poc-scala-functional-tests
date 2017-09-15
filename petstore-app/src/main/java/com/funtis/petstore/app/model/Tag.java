@@ -1,34 +1,34 @@
-package com.funtis.petstore.app.domain;
+package com.funtis.petstore.app.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * Created by Sławomir Kluz on 12/09/2017.
  */
 @Entity
-public class Category {
+@Table(name = "tags")
+public class Tag extends AbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(nullable = false)
+    @NotNull
     private String name;
 
-    public Category() {
+    public Tag() {
 
     }
 
-    public Category(String name) {
+    public Tag(String name) {
         this.name = name;
     }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -38,4 +38,5 @@ public class Category {
     public void setName(String name) {
         this.name = name;
     }
+
 }

@@ -1,6 +1,6 @@
 package com.funtis.petstore.app.repository;
 
-import com.funtis.petstore.app.domain.Tag;
+import com.funtis.petstore.app.model.Tag;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
