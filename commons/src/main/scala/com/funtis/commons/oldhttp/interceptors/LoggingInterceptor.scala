@@ -1,4 +1,4 @@
-package com.funtis.commons.http.interceptors
+package com.funtis.commons.oldhttp.interceptors
 
 import java.nio.charset.Charset
 

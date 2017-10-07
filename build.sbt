@@ -11,12 +11,14 @@ lazy val versions = new {
   val TypesafeConfig = "1.3.1"
   val Logback = "1.2.3"
   val ScalaLogging = "3.7.2"
-  val ScalaTest = "3.0.1"
-  val OkHttp = "3.8.1"
-  val Jackson = "2.9.0"
+  val ScalaTest = "3.0.4"
+  val OkHttp = "3.9.0"
+  val Jackson = "2.9.1"
   val Gatling = "2.3.0"
-  val Selenium = "3.5.3"
-  val SpringBoot = "1.5.6.RELEASE"
+  val Selenium = "3.6.0"
+  val SpringBoot = "1.5.7.RELEASE"
+  val JavaFaker = "0.13"
+  val ApacheHttpClient = "4.5.3"
 }
 
 lazy val `functional-tests-in-scala` = (project in file("."))
@@ -40,8 +42,10 @@ lazy val `commons` = project
     "com.typesafe.scala-logging" %% "scala-logging" % versions.ScalaLogging,
     "org.scalatest" %% "scalatest" % versions.ScalaTest % Test,
     "com.squareup.okhttp3" % "okhttp" % versions.OkHttp,
+    "org.apache.httpcomponents" % "httpclient" % versions.ApacheHttpClient,
     "com.fasterxml.jackson.module" % "jackson-module-scala_2.12" % versions.Jackson,
-    "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % versions.Jackson
+    "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % versions.Jackson,
+    "com.github.javafaker" % "javafaker" % versions.JavaFaker
   ))
 
 lazy val `commons-api` = project
@@ -83,7 +87,7 @@ lazy val `petstore-app` = project
     "org.springframework.boot" % "spring-boot-starter-actuator" % versions.SpringBoot,
     "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % versions.Jackson,
     "org.jadira.usertype" % "usertype.extended" % "5.0.0.GA",
-    "com.h2database" % "h2" % "1.4.195"
+    "com.h2database" % "h2" % "1.4.196"
   ))
 
 lazy val `petstore-mock` = project

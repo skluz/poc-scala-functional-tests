@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 
 /**
- * Created by skluz@g2a.com on 14/09/2017.
+ * Created by Sławomir Kluz on 14/09/2017.
  */
 @Converter(autoApply = true)
 public class InstantAttributeConverter implements AttributeConverter<Instant, Timestamp> {

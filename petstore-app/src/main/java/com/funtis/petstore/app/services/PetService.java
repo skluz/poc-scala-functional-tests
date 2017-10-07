@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by skluz@g2a.com on 14/09/2017.
+ * Created by Sławomir Kluz on 14/09/2017.
  */
 @Service
 public class PetService {

@@ -1,7 +1,10 @@
 package app
 
+import java.net.URI
 import java.time.Instant
 
+import com.funtis.commons
+import com.funtis.commons.http
 import com.funtis.commons.http.RestClient
 import com.typesafe.scalalogging.LazyLogging
 import model.{Address, Person}
@@ -11,13 +14,15 @@ import model.{Address, Person}
   */
 object Application extends App with LazyLogging {
 
-  val body = Person("Stefan", None, null, 10, Instant.now(), Seq("a", "b", "c"), Address(false, Map("a" -> "b", 3 -> "a")))
+  val response = new RestClient.Builder().GET()
+  logger.info(response.toString)
 
-  val restClient = new RestClient()
-    .tag("test")
-    .pathParam("gameId", 1)
-    .Get("/games/{gameId}")
-    .assertCode(200)
-      .body.as(classOf[Person])
+//
+//  val restClient = new RestClient()
+//    .tag("test")
+//    .pathParam("gameId", 1)
+//    .Get("/games/{gameId}")
+//    .assertCode(200)
+//      .body.as(classOf[Person])
 
 }

@@ -1,14 +1,15 @@
-package com.funtis.commons.json
+package com.funtis.commons.json.jackson
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include
 import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper, SerializationFeature}
+import com.funtis.commons.json.JSONParser
 
 import scala.reflect.{classTag, _}
 
 /**
   * Created by Sławomir Kluz on 06/09/2017.
   */
-private class JSONJacksonParser extends JSONParser {
+class JSONJacksonParser extends JSONParser {
 
   private val mapper = new ObjectMapper()
   mapper.findAndRegisterModules()

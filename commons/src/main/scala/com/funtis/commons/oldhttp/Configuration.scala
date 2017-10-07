@@ -1,6 +1,6 @@
-package com.funtis.commons.http
+package com.funtis.commons.oldhttp
 
-import com.funtis.commons.http.interceptors.LoggingInterceptor
+import com.funtis.commons.oldhttp.interceptors.LoggingInterceptor
 import com.funtis.commons.json.JSONParser
 import okhttp3.{Interceptor, OkHttpClient}
 

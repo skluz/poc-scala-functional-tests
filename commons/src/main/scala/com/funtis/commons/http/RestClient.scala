@@ -1,102 +1,134 @@
 package com.funtis.commons.http
 
-import java.util.UUID
+import java.net.URI
 
+import com.funtis.commons.http.Method.Method
+import com.funtis.commons.http.apache.ApacheRestClient
+import com.funtis.commons.http.okhttp.OkHttpRestClient
+import com.funtis.commons.random.Randomizer
 import com.typesafe.scalalogging.LazyLogging
-import okhttp3.{HttpUrl, Request, RequestBody}
 
 import scala.collection.mutable
-import scala.collection.JavaConverters._
 
 /**
-  * Created by Sławomir Kluz on 11/09/2017.
+  * Created by Sławomir Kluz on 04/10/2017.
   */
-class RestClient(
-  specification: Specification = Specification.default,
-  configuration: Configuration = Configuration.default) extends LazyLogging {
+trait RestClient {
+  def execute(request: Request, context: Context): Response
+}
 
-  private var uri: String = specification.baseUri
-  private var path: String = specification.basePath
-  private var tag: String = UUID.randomUUID().toString
-  private var body: Any = _
+object RestClient extends LazyLogging {
+  private lazy val default = apache
+  private lazy val okHttp = new OkHttpRestClient
+  private lazy val apache = new ApacheRestClient
 
-  private val pathParams = mutable.Map[String, AnyVal]()
+  class Builder(specification: Specification = Specification.default, context: Context = Context.default) {
 
-  def Post(): Response = execute("POST")
-  def Post(path: String): Response = execute("POST", path)
-  def Get(): Response = execute("GET")
-  def Get(path: String): Response = execute("GET", path)
-  def Patch(): Response = execute("PATCH")
-  def Patch(path: String): Response = execute("Patch", path)
-  def Delete(): Response = execute("DELETE")
-  def Delete(path: String): Response = execute("DELETE", path)
+    private val restClient: RestClient = default
 
-  def baseUri(uri: String): RestClient = {
-    this.uri = uri
-    this
-  }
+    private var baseUri: String = specification.baseUri
+    private var path: String = _
+    private var name: String = Randomizer.id()
+    private var body: Any = _
 
-  def pathParam(name: String, value: AnyVal): RestClient = {
-    pathParams += name -> value
-    this
-  }
+    private val pathParams = mutable.Map[String, Any]()
+    private val queryParams = mutable.Buffer[(String, Any)]()
+    private val headers = mutable.Buffer[Header]()
 
-  def path(path: String): RestClient = {
-    this.path = path
-    this
-  }
+    def baseUri(uri: String): Builder = {
+      this.baseUri = uri
+      this
+    }
 
-  def body(body: Any): RestClient = {
-    this.body = body
-    this
-  }
+    def pathParam(name: String, value: Any): Builder = {
+      pathParams += name -> value
+      this
+    }
 
-  def tag(tag: String): RestClient = {
-    this.tag = tag
-    this
-  }
+    def queryParam(name: String, value: Any): Builder = {
+      queryParams += name -> value
+      this
+    }
 
-  private def execute(method: String): Response = {
-    execute(method, path)
-  }
+    def queryParam(name: String, value: Option[_]): Builder = {
+      if(value.isDefined) queryParams += name -> value.get
+      this
+    }
 
-  private def execute(method: String, path: String): Response = {
-    val request = new Request.Builder()
-      .url(buildUrl(path))
-      .method(method, buildBody(body))
-      .headers(buildHeaders())
-      .tag(tag)
-      .build()
-    val rawResponse: okhttp3.Response = configuration.client.newCall(request).execute()
-    buildResponse(rawResponse)
-  }
+    def queryParam(params: Seq[(String, Any)]): Builder = {
+      queryParams ++= params
+      this
+    }
 
-  private def buildResponse(rawResponse: okhttp3.Response): Response = {
-    val headers = Headers(rawResponse.headers().names().asScala.map(n => Header(n, rawResponse.headers().get(n))).toSeq)
-    val rawBody = rawResponse.body()
-    val response = Response(rawResponse.code(), headers, new Body(rawBody.string(), configuration.parser))
-    rawBody.close()
-    response
-  }
+    def path(path: String): Builder = {
+      this.path = path
+      this
+    }
 
-  private def buildHeaders(): okhttp3.Headers = {
-    okhttp3.Headers.of(specification.headers.asMap().asJava)
-  }
+    def body(body: Any): Builder = {
+      this.body = body
+      this
+    }
 
-  private def buildBody(body: Any): RequestBody = {
-    if(body == null) null else RequestBody.create(null, configuration.parser.toJSON(body))
-  }
+    def name(name: String): Builder = {
+      this.name = name
+      this
+    }
 
-  private def buildUrl(path: String) = {
-    HttpUrl.parse(uri).newBuilder()
-      .addPathSegments(resolvePath(path))
-      .build()
-  }
+    def GET(): Response = execute(Method.GET)
+    def GET(path: String): Response = execute(Method.GET, path)
 
-  private def resolvePath(path: String): String = {
-    val keys = """\{([A-Za-z]+)\}""".r.findAllMatchIn(path).map(m => m.group(1)).toSeq
-    if(!keys.sameElements(pathParams.keys)) throw new IllegalArgumentException(s"Inconsistent path parameters: $path, params: ${pathParams.keySet.mkString(", ")}")
-    (path.replaceFirst("^/","") /: pathParams) { (t, kv) => t.replace("{" + kv._1 + "}", kv._2.toString)}
+    def buildRequest(method: Method): Request = {
+      try {
+        Request(method, buildUrl(), buildHeaders(), buildBody(), Some(name))
+      } catch {
+        case t: Throwable => throw new RequestValidationException("Cannot build request", t)
+      }
+    }
+
+    def execute(method: Method): Response = {
+      restClient.execute(buildRequest(method), context)
+    }
+
+    def execute(method: Method, path: String): Response = {
+      this.path = path
+      execute(method)
+    }
+
+    def resolveQuery(baseQuery: String, queryParams: mutable.Buffer[(String, Any)]): String = {
+      val fixedQuery = if(queryParams.isEmpty) null else queryParams.map(_.productIterator.filter(_ != null).mkString("=")).mkString("&")
+      val result = new mutable.StringBuilder()
+      if(baseQuery != null) result.append(baseQuery)
+      if(baseQuery != null && fixedQuery != null) result.append("&")
+      if(fixedQuery != null) result.append(fixedQuery)
+      if(baseQuery != null && baseQuery.isEmpty) return ""
+      if(result.isEmpty) null else result.toString()
+    }
+
+    private def buildUrl(): String = {
+      val uri = URI.create(this.baseUri)
+      val pathUpdatedUri = new URI(uri.getScheme, uri.getRawAuthority, resolvePath(uri.getRawPath, this.path), resolveQuery(uri.getRawQuery, queryParams), uri.getRawFragment)
+      pathUpdatedUri.toString
+    }
+
+    private def buildBody(): Any = {
+      body
+    }
+
+    private def buildHeaders(): Headers = {
+      Headers(specification.headers.headers ++ headers)
+    }
+
+    private def resolvePath(basePath: String, path: String): String = {
+      val fixedBasePath = if(basePath == null || basePath.isEmpty) "/" else basePath
+      val fixedPath = if(path == null || path.isEmpty) "" else {
+        val keys = """\{([A-Za-z]+)\}""".r.findAllMatchIn(path).map(m => m.group(1)).toSeq
+        if(!keys.toSet.equals(pathParams.keys.toSet)) throw new IllegalArgumentException(s"Inconsistent path parameters: $path, params: [${pathParams.keySet.mkString(", ")}]")
+        (path.replaceFirst("^([^\\/])","/$1") /: pathParams) { (t, kv) => t.replace("{" + kv._1 + "}", kv._2.toString)}
+      }
+      if(fixedBasePath.endsWith("/") && fixedPath.startsWith("/")) fixedBasePath.dropRight(1) + fixedPath else fixedBasePath + fixedPath
+    }
+
   }
 
 }

@@ -1,9 +1,10 @@
-package com.funtis.commons.json
+package com.funtis.commons.json.jackson
 
 import java.time.Instant
 
 import com.fasterxml.jackson.core.`type`.TypeReference
 import com.fasterxml.jackson.module.scala.JsonScalaEnumeration
+import com.funtis.commons.json._
 import com.typesafe.scalalogging.LazyLogging
 import org.scalatest.{FlatSpec, Matchers}
 

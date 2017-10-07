@@ -1,5 +1,7 @@
 package com.funtis.commons.json
 
+import com.funtis.commons.json.jackson.JSONJacksonParser
+
 import scala.reflect.ClassTag
 
 /**
