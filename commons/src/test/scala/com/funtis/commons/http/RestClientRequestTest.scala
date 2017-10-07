@@ -1,5 +1,6 @@
 package com.funtis.commons.http
 
+import com.funtis.commons.http
 import com.typesafe.scalalogging.LazyLogging
 import org.scalatest.{FlatSpec, Matchers}
 
@@ -8,13 +9,22 @@ import org.scalatest.{FlatSpec, Matchers}
   */
 class RestClientRequestTest extends FlatSpec with Matchers with LazyLogging {
 
+  behavior of "specification"
+
+  it should "use default specification" in {
+    val request = new http.RestClient.Builder().REQUEST()
+    request.url shouldBe "http://localhost/"
+    request.method shouldBe Method.GET
+    request.headers shouldBe Headers(Header("Content-Type", "application/json; charset=utf-8"), Header("Accept", "application/json"))
+  }
+
   behavior of "base uri"
 
   it should "handle url without path" in {
-    new RestClient.Builder().baseUri("https://10.0.0.1").buildRequest(Method.GET).url shouldBe "https://10.0.0.1/"
-    new RestClient.Builder().baseUri("http://localhost/").buildRequest(Method.GET).url shouldBe "http://localhost/"
-    new RestClient.Builder().baseUri("https://10.0.0.1/api").buildRequest(Method.GET).url shouldBe "https://10.0.0.1/api"
-    new RestClient.Builder().baseUri("http://localhost/api/").buildRequest(Method.GET).url shouldBe "http://localhost/api/"
+    new RestClient.Builder().baseUri("https://10.0.0.1").REQUEST().url shouldBe "https://10.0.0.1/"
+    new RestClient.Builder().baseUri("http://localhost/").REQUEST().url shouldBe "http://localhost/"
+    new RestClient.Builder().baseUri("https://10.0.0.1/api").REQUEST().url shouldBe "https://10.0.0.1/api"
+    new RestClient.Builder().baseUri("http://localhost/api/").REQUEST().url shouldBe "http://localhost/api/"
   }
 
   Seq(
@@ -57,7 +67,7 @@ class RestClientRequestTest extends FlatSpec with Matchers with LazyLogging {
     ("abc://username:password@example.com:123/path/data?key=value&key2=value2#fragid1", "abc://username:password@example.com:123/path/data?key=value&key2=value2#fragid1")
   ).foreach { case (baseUri, expected) =>
     it should s"handle correct [$baseUri] url" in {
-      new RestClient.Builder().baseUri(baseUri).buildRequest(Method.GET).url shouldBe expected
+      new RestClient.Builder().baseUri(baseUri).REQUEST().url shouldBe expected
     }
   }
 
@@ -71,7 +81,7 @@ class RestClientRequestTest extends FlatSpec with Matchers with LazyLogging {
     "http://foo.bar/foo(bar)baz quux",
   ).foreach(baseUri => {
     it should s"fail bad [$baseUri] url" in {
-      an[RequestValidationException] should be thrownBy new RestClient.Builder().baseUri(baseUri).buildRequest(Method.GET)
+      an[RequestValidationException] should be thrownBy new RestClient.Builder().baseUri(baseUri).REQUEST()
     }
   })
 
@@ -136,7 +146,7 @@ class RestClientRequestTest extends FlatSpec with Matchers with LazyLogging {
     ("http://onet.pl/api/v2/?query=test", "/resource/v1", "http://onet.pl/api/v2/resource/v1?query=test")
   ).foreach { case (baseUri, path, expected) => {
     it should s"handle [$baseUri] + [$path] => [$expected]" in {
-      new RestClient.Builder().baseUri(baseUri).path(path).buildRequest(Method.GET).url shouldBe expected
+      new RestClient.Builder().baseUri(baseUri).path(path).REQUEST().url shouldBe expected
     }
   }
   }
@@ -146,53 +156,53 @@ class RestClientRequestTest extends FlatSpec with Matchers with LazyLogging {
   it should "handle simple path params" in {
     new RestClient.Builder().baseUri("https://www.wp.pl/api")
       .pathParam("int", 1).pathParam("string", "big").pathParam("bool", false)
-      .path("/resource/{int}/{string}/{bool}").buildRequest(Method.GET).url shouldBe "https://www.wp.pl/api/resource/1/big/false"
+      .path("/resource/{int}/{string}/{bool}").REQUEST().url shouldBe "https://www.wp.pl/api/resource/1/big/false"
     new RestClient.Builder().baseUri("https://www.wp.pl/api")
       .pathParam("a", "A").pathParam("b", "B")
-      .path("{a}{b}").buildRequest(Method.GET).url shouldBe "https://www.wp.pl/api/AB"
+      .path("{a}{b}").REQUEST().url shouldBe "https://www.wp.pl/api/AB"
     new RestClient.Builder().baseUri("https://www.wp.pl/api")
       .pathParam("b", "B").pathParam("a", "A")
-      .path("{a}{b}").buildRequest(Method.GET).url shouldBe "https://www.wp.pl/api/AB"
+      .path("{a}{b}").REQUEST().url shouldBe "https://www.wp.pl/api/AB"
   }
 
   it should "fail when not all params are provided" in {
     an[RequestValidationException] should be thrownBy new RestClient.Builder().baseUri("https://www.wp.pl/api")
       .pathParam("int", 1)
       .pathParam("string", "big")
-      .path("/resource/{int}/{string}/{bool}").buildRequest(Method.GET)
+      .path("/resource/{int}/{string}/{bool}").REQUEST()
   }
 
   it should "fail when there are to many params" in {
     an[RequestValidationException] should be thrownBy new RestClient.Builder().baseUri("https://www.wp.pl/api")
       .pathParam("int", 1)
       .pathParam("string", "big")
-      .path("/resource/{int}").buildRequest(Method.GET)
+      .path("/resource/{int}").REQUEST()
   }
 
   behavior of "query"
 
   it should "handle single param" in {
-    new RestClient.Builder().baseUri("https://www.google.com").path("/path").queryParam("sort", "desc").buildRequest(Method.GET).url shouldBe "https://www.google.com/path?sort=desc"
+    new RestClient.Builder().baseUri("https://www.google.com").path("/path").queryParam("sort", "desc").REQUEST().url shouldBe "https://www.google.com/path?sort=desc"
   }
 
   it should "handle multiple params" in {
-    new RestClient.Builder().baseUri("https://www.google.com").path("/search").queryParam("sort", "name").queryParam("order", "desc").buildRequest(Method.GET).url shouldBe "https://www.google.com/search?sort=name&order=desc"
+    new RestClient.Builder().baseUri("https://www.google.com").path("/search").queryParam("sort", "name").queryParam("order", "desc").REQUEST().url shouldBe "https://www.google.com/search?sort=name&order=desc"
   }
 
   it should "handle empty param" in {
-    new RestClient.Builder().baseUri("https://www.google.com").path("/search").queryParam("sort", "").buildRequest(Method.GET).url shouldBe "https://www.google.com/search?sort="
+    new RestClient.Builder().baseUri("https://www.google.com").path("/search").queryParam("sort", "").REQUEST().url shouldBe "https://www.google.com/search?sort="
   }
 
   it should "handle some option param" in {
-    new RestClient.Builder().baseUri("https://www.google.com").path("/search").queryParam("sort", Some("desc")).buildRequest(Method.GET).url shouldBe "https://www.google.com/search?sort=desc"
+    new RestClient.Builder().baseUri("https://www.google.com").path("/search").queryParam("sort", Some("desc")).REQUEST().url shouldBe "https://www.google.com/search?sort=desc"
   }
 
   it should "handle none option param" in {
-    new RestClient.Builder().baseUri("https://www.google.com").path("/search").queryParam("sort", None).buildRequest(Method.GET).url shouldBe "https://www.google.com/search"
+    new RestClient.Builder().baseUri("https://www.google.com").path("/search").queryParam("sort", None).REQUEST().url shouldBe "https://www.google.com/search"
   }
 
   it should "handle list of param" in {
-    new RestClient.Builder().baseUri("https://www.google.com").path("/search").queryParam(Seq("a" -> "b", "c" -> "d")).buildRequest(Method.GET).url shouldBe "https://www.google.com/search?a=b&c=d"
+    new RestClient.Builder().baseUri("https://www.google.com").path("/search").queryParam(Seq("a" -> "b", "c" -> "d")).REQUEST().url shouldBe "https://www.google.com/search?a=b&c=d"
   }
 
 

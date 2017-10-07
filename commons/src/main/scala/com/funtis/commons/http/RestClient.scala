@@ -26,14 +26,15 @@ object RestClient extends LazyLogging {
 
     private val restClient: RestClient = default
 
+    private var method: Method = specification.method
     private var baseUri: String = specification.baseUri
     private var path: String = _
-    private var name: String = Randomizer.id()
-    private var body: Any = _
-
     private val pathParams = mutable.Map[String, Any]()
     private val queryParams = mutable.Buffer[(String, Any)]()
     private val headers = mutable.Buffer[Header]()
+    private var body: Any = _
+
+    private var name: String = Randomizer.id()
 
     def baseUri(uri: String): Builder = {
       this.baseUri = uri
@@ -75,10 +76,12 @@ object RestClient extends LazyLogging {
       this
     }
 
-    def GET(): Response = execute(Method.GET)
-    def GET(path: String): Response = execute(Method.GET, path)
+    def method(method: Method): Builder = {
+      this.method = method
+      this
+    }
 
-    def buildRequest(method: Method): Request = {
+    def REQUEST(method: Method = this.method, path: String = this.path): Request = {
       try {
         Request(method, buildUrl(), buildHeaders(), buildBody(), Some(name))
       } catch {
@@ -86,13 +89,11 @@ object RestClient extends LazyLogging {
       }
     }
 
-    def execute(method: Method): Response = {
-      restClient.execute(buildRequest(method), context)
-    }
+    def GET(): Response = execute(REQUEST(Method.GET))
+    def GET(path: String): Response = execute(REQUEST(Method.GET, path))
 
-    def execute(method: Method, path: String): Response = {
-      this.path = path
-      execute(method)
+    def execute(request: Request): Response = {
+      restClient.execute(request, this.context)
     }
 
     def resolveQuery(baseQuery: String, queryParams: mutable.Buffer[(String, Any)]): String = {
@@ -105,21 +106,21 @@ object RestClient extends LazyLogging {
       if(result.isEmpty) null else result.toString()
     }
 
-    private def buildUrl(): String = {
-      val uri = URI.create(this.baseUri)
-      val pathUpdatedUri = new URI(uri.getScheme, uri.getRawAuthority, resolvePath(uri.getRawPath, this.path), resolveQuery(uri.getRawQuery, queryParams), uri.getRawFragment)
+    private def buildUrl(uriArg: String = this.baseUri, pathArg: String = this.path, pathParamsArg: mutable.Map[String, Any] = this.pathParams, queryParamsArg: mutable.Buffer[(String, Any)] = this.queryParams): String = {
+      val uri = URI.create(uriArg)
+      val pathUpdatedUri = new URI(uri.getScheme, uri.getRawAuthority, resolvePath(uri.getRawPath, pathArg, pathParamsArg), resolveQuery(uri.getRawQuery, queryParamsArg), uri.getRawFragment)
       pathUpdatedUri.toString
     }
 
-    private def buildBody(): Any = {
+    private def buildBody(body: Any = this.body): Any = {
       body
     }
 
-    private def buildHeaders(): Headers = {
-      Headers(specification.headers.headers ++ headers)
+    private def buildHeaders(headers: mutable.Buffer[Header] = this.headers): Headers = {
+      Headers(specification.headers.headers ++ headers: _*)
     }
 
-    private def resolvePath(basePath: String, path: String): String = {
+    private def resolvePath(basePath: String, path: String, pathParams: mutable.Map[String, Any]): String = {
       val fixedBasePath = if(basePath == null || basePath.isEmpty) "/" else basePath
       val fixedPath = if(path == null || path.isEmpty) "" else {
         val keys = """\{([A-Za-z]+)\}""".r.findAllMatchIn(path).map(m => m.group(1)).toSeq
