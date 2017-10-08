@@ -14,10 +14,10 @@ class ApacheRestClient extends RestClient {
   override def execute(request: Request, context: Context): Response = {
     val client = HttpClients.createDefault()
     val clientRequestBuilder = RequestBuilder.create(request.method.toString).setUri(request.url)
-    request.headers.headers.foreach(h => clientRequestBuilder.addHeader(h.name, h.value))
+    request.headers.asList().foreach(h => clientRequestBuilder.addHeader(h.name, h.value))
     val clientRequest = clientRequestBuilder.build()
     val clientResponse = client.execute(clientRequest)
-    val responseHeaders = Headers(clientResponse.getAllHeaders.map(h => Header(h.getName, h.getValue)))
+    val responseHeaders = new Headers(clientResponse.getAllHeaders.map(h => Header(h.getName, h.getValue)): _*)
     Response(clientResponse.getStatusLine.getStatusCode, responseHeaders, null)
   }
 }

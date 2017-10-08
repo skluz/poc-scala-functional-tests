@@ -8,7 +8,7 @@ import com.funtis.commons.http.Method.Method
 case class Specification(
   baseUri: String = "http://localhost/",
   method: Method = Method.GET,
-  headers: Headers = Headers(Seq(Header("Content-Type", "application/json; charset=utf-8"), Header("Accept", "application/json")))
+  headers: Headers = new Headers(Header("Content-Type", "application/json; charset=utf-8"), Header("Accept", "application/json"))
 )
 
 object Specification {

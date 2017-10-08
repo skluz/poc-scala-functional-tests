@@ -41,6 +41,11 @@ object RestClient extends LazyLogging {
       this
     }
 
+    def headers(name: String, value: String): Builder = {
+      headers += Header(name, value)
+      this
+    }
+
     def pathParam(name: String, value: Any): Builder = {
       pathParams += name -> value
       this
@@ -117,7 +122,7 @@ object RestClient extends LazyLogging {
     }
 
     private def buildHeaders(headers: mutable.Buffer[Header] = this.headers): Headers = {
-      Headers(specification.headers.headers ++ headers: _*)
+      new Headers(specification.headers.asList() ++ headers: _*)
     }
 
     private def resolvePath(basePath: String, path: String, pathParams: mutable.Map[String, Any]): String = {

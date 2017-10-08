@@ -44,11 +44,12 @@ class OkHttpRestClient extends RestClient {
   }
 
   private def buildHeaders(request: Request): okhttp3.Headers = {
-    okhttp3.Headers.of(request.headers.asMap().asJava)
+    //okhttp3.Headers.of(request.headers.headers.asJava)
+    null
   }
 
   private def buildResponse(clientResponse: okhttp3.Response): Response = {
-    val headers = Headers(clientResponse.headers().names().asScala.map(n => Header(n, clientResponse.headers().get(n))).toSeq)
+    val headers = new Headers(clientResponse.headers().names().asScala.map(n => Header(n, clientResponse.headers().get(n))).toSeq: _*)
     val rawBody = clientResponse.body()
     val response = Response(clientResponse.code(), headers, new ResponseBody(rawBody.string()))
     rawBody.close()

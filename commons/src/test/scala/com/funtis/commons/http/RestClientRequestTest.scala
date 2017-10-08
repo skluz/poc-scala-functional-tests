@@ -12,10 +12,26 @@ class RestClientRequestTest extends FlatSpec with Matchers with LazyLogging {
   behavior of "specification"
 
   it should "use default specification" in {
-    val request = new http.RestClient.Builder().REQUEST()
+    val request = new RestClient.Builder().REQUEST()
     request.url shouldBe "http://localhost/"
     request.method shouldBe Method.GET
-    request.headers shouldBe Headers(Header("Content-Type", "application/json; charset=utf-8"), Header("Accept", "application/json"))
+    request.headers shouldBe new Headers(Header("Content-Type", "application/json; charset=utf-8"), Header("Accept", "application/json"))
+  }
+
+  it should "use custom specification" in {
+    val specification = Specification("https://httpbin.org/", Method.POST, new Headers(Header("User-Agent", "Something")))
+    val request = new http.RestClient.Builder(specification).REQUEST()
+    request.url shouldBe "https://httpbin.org/"
+    request.method shouldBe Method.POST
+    request.headers shouldBe new Headers(Header("User-Agent", "Something"))
+  }
+
+  it should "be possible to overwrite specification" in {
+    val specification = Specification("https://httpbin.org/", Method.POST, new Headers(Header("User-Agent", "Something")))
+    val request = new http.RestClient.Builder(specification).baseUri("http://www.wp.pl").headers("User-Agent", "New").REQUEST(Method.GET)
+    request.url shouldBe "http://www.wp.pl/"
+    request.method shouldBe Method.GET
+    request.headers shouldBe new Headers(Header("User-Agent", "New"))
   }
 
   behavior of "base uri"
