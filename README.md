@@ -23,6 +23,10 @@
 - [ ] Logging: logback.xml for api, web, perf - sbt + intellij
 - [ ] Document all maintainer processes (triage, release, etc.)
 - [ ] sbt jenkins configurable targets
+- [ ] add scripts to download latest selenium driver
+- [ ] aspect-based logging in commons-web
+- [ ] scalatra for mocks
+- [ ] reuse parser & http client
 
 ## License
 

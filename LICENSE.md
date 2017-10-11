@@ -1,4 +1,4 @@
-Copyright (c) 2011-2017 Sławomir Kluz Inc.
+Copyright (c) 2016-2017 Sławomir Kluz Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
