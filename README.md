@@ -4,9 +4,16 @@
 
 ##### JSON parser
 * JSON serialization/deserialization handled by Jackson
-* java.time.Instant to ISO 8601 conversion
-* serialization fails when unknown field occurs in response or required field is missing
-* None and null are skipped in request
+* `java.time.Instant` to ISO 8601 conversion, e.g. `2014-12-03T10:15:30Z`
+* serialization (object to JSON)
+  * `null` fields are omitted
+  * `None` is serialized to `null`
+* deserialization (JSON to object)
+  * `null` is deserialize to `null` or `None` for `Option`
+  * missing properties are deserialized to `null` or `None` for `Option`
+  * deserialization fails when unknown field occurs in JSON (to enforce a new assertion or test)
+* enums are handled by `@JsonScalaEnumeration` 
+* check `com.funtis.commons.json.jackson.JSONParserTest` for some examples
 
 ##### Dependency updates check
 * run `sbt dependencyUpdates` to check which dependencies can be updated
@@ -21,7 +28,6 @@
 
 ### ToDo
 - [ ] Logging: logback.xml for api, web, perf - sbt + intellij
-- [ ] Document all maintainer processes (triage, release, etc.)
 - [ ] sbt jenkins configurable targets
 - [ ] add scripts to download latest selenium driver
 - [ ] aspect-based logging in commons-web

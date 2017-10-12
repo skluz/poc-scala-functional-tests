@@ -17,12 +17,13 @@ class JSONJacksonParser extends JSONParser {
   // dates will be serialized to ISO-8601 formatted string
   mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
   // nulls or Nones will be skipped in serialized string
-  mapper.setSerializationInclusion(Include.NON_ABSENT)
+  mapper.setSerializationInclusion(Include.NON_NULL)
 
-  // deserialization will fail if new property (not defined in model) occurs
+  // deserialization will fail if new property (not defined in class) occurs
   mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true)
-  // deserialization will fail if model property is missing
-  mapper.configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, true)
+  // deserialization will not fail if model property is missing
+  mapper.configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, false)
+
 
   override def toJSON(any: Any): String = {
     mapper.writeValueAsString(any)

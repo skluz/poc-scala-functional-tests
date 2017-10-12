@@ -23,11 +23,14 @@ class JSONParserTest extends FlatSpec with Matchers with LazyLogging {
 
   it should "does not serialize null values" in {
     parser.toJSON(NullCase(1, null)) shouldBe """{"number":1}"""
+    parser.toJSON(NullOptionCase(1, null)) shouldBe """{"number":1}"""
   }
 
-  it should "does not serialize None" in {
-    parser.toJSON(NullCase(1, null)) shouldBe """{"number":1}"""
-    parser.toJSON(NullOptionCase(1, None)) shouldBe """{"number":1}"""
+  it should "serialize None to null" in {
+    parser.toJSON(NullOptionCase(1, None)) shouldBe """{"number":1,"option":null}"""
+  }
+
+  it should "serialize Option" in {
     parser.toJSON(NullOptionCase(1, Some("hello"))) shouldBe """{"number":1,"option":"hello"}"""
   }
 
@@ -74,10 +77,12 @@ class JSONParserTest extends FlatSpec with Matchers with LazyLogging {
     parser.fromJSON("""{"number":1,"option":null}""", classOf[NullOptionCase]) shouldBe NullOptionCase(1, None)
   }
 
-  it should "fail on missing properties" in {
-    assertThrows[Exception] {
-      parser.fromJSON("""{"number":1}""", classOf[NullCase])
-    }
+  it should "handle missing Options property" in {
+    parser.fromJSON("""{"number":1}""", classOf[NullOptionCase]) shouldBe NullOptionCase(1, None)
+  }
+
+  it should "handle missing properties" in {
+    parser.fromJSON("""{}""", classOf[NullOptionCase]) shouldBe NullOptionCase(null, None)
   }
 
   it should "fail on unknown properties" in {
@@ -90,7 +95,6 @@ class JSONParserTest extends FlatSpec with Matchers with LazyLogging {
     parser.fromJSON[GenericSequenceCase[SimpleCase]]("""{"data":[{"number":1},{"number":2}]}""", classOf[GenericSequenceCase[_]], classOf[SimpleCase]) shouldBe GenericSequenceCase[SimpleCase](Seq(SimpleCase(1), SimpleCase(2)))
   }
 
-
   it should "handle enums" in {
     parser.fromJSON("""{"value":"No"}""", classOf[EnumCase]) shouldBe EnumCase(YesNo.No)
   }
@@ -99,8 +103,8 @@ class JSONParserTest extends FlatSpec with Matchers with LazyLogging {
 
 case class InstantCase(time: Instant)
 case class SimpleCase(number: Int)
-case class NullCase(number: Int, string: String)
-case class NullOptionCase(number: Int, option: Option[String])
+case class NullCase(number: Integer, string: String)
+case class NullOptionCase(number: Integer, option: Option[String])
 case class SequenceCase(number: Int, seq: Seq[Any])
 case class MapCase(number: Int, map: Map[Any, Any])
 case class NestedCase(number: Int, nested: NullCase)
