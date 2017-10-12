@@ -16,9 +16,9 @@ lazy val versions = new {
   val Jackson = "2.9.1"
   val Gatling = "2.3.0"
   val Selenium = "3.6.0"
-  val SpringBoot = "1.5.7.RELEASE"
   val JavaFaker = "0.13"
   val ApacheHttpClient = "4.5.3"
+  val Scalatra = "2.5.1"
 }
 
 lazy val `functional-tests-in-scala` = (project in file("."))
@@ -29,7 +29,6 @@ lazy val `functional-tests-in-scala` = (project in file("."))
   .aggregate(`commons-web`)
   .aggregate(`petstore`)
   .aggregate(`petstore-api-tests`)
-  .aggregate(`petstore-app`)
   .aggregate(`petstore-mock`)
   .aggregate(`petstore-perf-tests`)
   .aggregate(`petstore-web-tests`)
@@ -54,6 +53,10 @@ lazy val `commons-api` = project
 
 lazy val `commons-mock` = project
   .settings(commonSettings: _*)
+  .settings(libraryDependencies ++= Seq(
+    "org.scalatra" %% "scalatra" % versions.Scalatra,
+    "org.eclipse.jetty" % "jetty-webapp" % "8.1.8.v20121106"
+  ))
   .dependsOn(`commons` % "compile->compile;test->test")
 
 lazy val `commons-perf` = project
@@ -78,17 +81,6 @@ lazy val `petstore` = project
 lazy val `petstore-api-tests` = project
   .settings(commonSettings: _*)
   .dependsOn(`petstore`, `commons-api` % "compile->compile;test->test")
-
-lazy val `petstore-app` = project
-  .settings(commonSettings: _*)
-  .settings(libraryDependencies ++= Seq(
-    "org.springframework.boot" % "spring-boot-starter-web" % versions.SpringBoot,
-    "org.springframework.boot" % "spring-boot-starter-data-jpa" % versions.SpringBoot,
-    "org.springframework.boot" % "spring-boot-starter-actuator" % versions.SpringBoot,
-    "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % versions.Jackson,
-    "org.jadira.usertype" % "usertype.extended" % "5.0.0.GA",
-    "com.h2database" % "h2" % "1.4.196"
-  ))
 
 lazy val `petstore-mock` = project
   .settings(commonSettings: _*)

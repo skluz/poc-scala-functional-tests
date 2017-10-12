@@ -1,4 +1,4 @@
-package com.funtiz.commons.api.service
+package com.funtis.commons.api.service
 
 import com.funtis.commons.oldhttp.RestClient
 import com.typesafe.scalalogging.LazyLogging
