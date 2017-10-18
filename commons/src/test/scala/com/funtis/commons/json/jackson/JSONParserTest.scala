@@ -50,6 +50,7 @@ class JSONParserTest extends FlatSpec with Matchers with LazyLogging {
 
   it should "handle direct types" in {
     parser.toJSON(1) shouldBe """1"""
+    parser.toJSON("hello") shouldBe """"hello""""
     parser.toJSON(true) shouldBe """true"""
     parser.toJSON(Seq(1, 2)) shouldBe """[1,2]"""
     parser.toJSON(Map(1 -> "ONE")) shouldBe """{"1":"ONE"}"""

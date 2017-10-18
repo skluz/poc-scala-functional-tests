@@ -5,7 +5,7 @@ import java.time.Instant
 
 import com.funtis.commons
 import com.funtis.commons.http
-import com.funtis.commons.http.RestClient
+import com.funtis.commons.http.HttpClient
 import com.typesafe.scalalogging.LazyLogging
 import model.{Address, Person}
 
@@ -14,7 +14,7 @@ import model.{Address, Person}
   */
 object Application extends App with LazyLogging {
 
-  val response = new RestClient.Builder().GET()
+  val response = new HttpClient.Builder().GET()
   logger.info(response.toString)
 
 //
