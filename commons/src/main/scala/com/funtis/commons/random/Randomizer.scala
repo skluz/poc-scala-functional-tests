@@ -15,10 +15,17 @@ object Randomizer extends LazyLogging {
 
   def id(): String = UUID.randomUUID().toString
 
+  object Number {
+    def int(min: Int = 1, max: Int = 1000): Int = faker.number().numberBetween(min, max)
+    def long(min: Long = 1, max: Long = 1000): Long = faker.number().numberBetween(min, max)
+  }
+
   object String {
     def firstName() = faker.address().firstName()
     def lastName() = faker.address().lastName()
     def emailAddress() = faker.internet().safeEmailAddress()
+    def petName() = faker.cat().name()
+    def planet() = faker.space().planet()
   }
 
 }

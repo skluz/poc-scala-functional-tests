@@ -12,8 +12,8 @@ lazy val versions = new {
   val Logback = "1.2.3"
   val ScalaLogging = "3.7.2"
   val ScalaTest = "3.0.4"
-  val OkHttp = "3.9.0"
   val Jackson = "2.9.1"
+  val JsonPath = "2.4.0"
   val Gatling = "2.3.0"
   val Selenium = "3.6.0"
   val JavaFaker = "0.13"
@@ -40,11 +40,12 @@ lazy val `commons` = project
     "ch.qos.logback" % "logback-classic" % versions.Logback,
     "com.typesafe.scala-logging" %% "scala-logging" % versions.ScalaLogging,
     "org.scalatest" %% "scalatest" % versions.ScalaTest % Test,
-    "com.squareup.okhttp3" % "okhttp" % versions.OkHttp,
     "org.apache.httpcomponents" % "httpclient" % versions.ApacheHttpClient,
     "com.fasterxml.jackson.module" % "jackson-module-scala_2.12" % versions.Jackson,
     "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310" % versions.Jackson,
-    "com.github.javafaker" % "javafaker" % versions.JavaFaker
+    "com.fasterxml.jackson.datatype" % "jackson-datatype-jdk8" % versions.Jackson,
+    "com.github.javafaker" % "javafaker" % versions.JavaFaker,
+    "com.jayway.jsonpath" % "json-path" % versions.JsonPath
   ))
 
 lazy val `commons-api` = project
@@ -55,14 +56,17 @@ lazy val `commons-mock` = project
   .settings(commonSettings: _*)
   .settings(libraryDependencies ++= Seq(
     "org.scalatra" %% "scalatra" % versions.Scalatra,
-    "org.eclipse.jetty" % "jetty-webapp" % "8.1.8.v20121106"
+    "org.scalatra" %% "scalatra-json" % versions.Scalatra,
+    "org.json4s" %% "json4s-jackson" % "3.5.3",
+    "org.json4s" % "json4s-ext_2.12" % "3.5.3",
+    "org.eclipse.jetty" % "jetty-webapp" % "9.4.7.v20170914"
   ))
   .dependsOn(`commons` % "compile->compile;test->test")
 
 lazy val `commons-perf` = project
   .settings(commonSettings: _*)
   .settings(libraryDependencies ++= Seq(
-    "io.gatling" % "gatling-core" % versions.Gatling
+    "io.gatling.highcharts" % "gatling-charts-highcharts" % versions.Gatling
   ))
   .dependsOn(`commons` % "compile->compile;test->test")
 

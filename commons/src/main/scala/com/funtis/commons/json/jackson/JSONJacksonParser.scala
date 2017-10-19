@@ -1,7 +1,7 @@
 package com.funtis.commons.json.jackson
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include
-import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper, SerializationFeature}
+import com.fasterxml.jackson.databind._
 import com.funtis.commons.json.JSONParser
 
 import scala.reflect.{classTag, _}
@@ -25,6 +25,7 @@ class JSONJacksonParser extends JSONParser {
   mapper.configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, false)
 
 
+
   override def toJSON(any: Any): String = {
     mapper.writeValueAsString(any)
   }
@@ -33,11 +34,24 @@ class JSONJacksonParser extends JSONParser {
     mapper.readValue(json, cls)
   }
 
+  override def fromJSON[T](json: Array[Byte], cls: Class[T]): T = {
+    mapper.readValue(json, cls)
+  }
+
   override def fromJSON[T: ClassTag](json: String): T = {
+    fromJSON(json, classTag[T].runtimeClass).asInstanceOf[T]
+  }
+
+  override def fromJSON[T: ClassTag](json: Array[Byte]): T = {
     fromJSON(json, classTag[T].runtimeClass).asInstanceOf[T]
   }
 
   override def fromJSON[T](json: String, parametrized: Class[_], parameterClasses: Class[_]): T = {
     mapper.readValue[T](json, mapper.getTypeFactory.constructParametricType(parametrized, parameterClasses))
   }
+
+  override def fromJSON[T](json: Array[Byte], parametrized: Class[_], parameterClasses: Class[_]): T = {
+    mapper.readValue[T](json, mapper.getTypeFactory.constructParametricType(parametrized, parameterClasses))
+  }
+
 }

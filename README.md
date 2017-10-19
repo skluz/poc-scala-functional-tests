@@ -27,12 +27,15 @@
     * mark selected test like: `it should "test something" in taggedAs WIP { ... }`
 
 ### ToDo
-- [ ] Logging: logback.xml for api, web, perf - sbt + intellij
+- [ ] logging: logback.xml for api, web, perf - sbt + intellij
+- [ ] optional raw request logging (https://hc.apache.org/httpcomponents-client-4.5.x/logging.html) 
 - [ ] sbt jenkins configurable targets
-- [ ] add scripts to download latest selenium driver
+- [x] add scripts to download latest selenium driver
 - [ ] aspect-based logging in commons-web
-- [ ] scalatra for mocks
-- [ ] reuse parser & http client
+- [x] scalatra for mocks
+- [x] reuse parser & http client
+- [ ] entity + tests + readme
+- [ ] FAIL_ON_MISSING_CREATOR_PROPERTIES vs Option[_]
 
 ## License
 
