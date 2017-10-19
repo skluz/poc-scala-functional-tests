@@ -1,4 +1,4 @@
-name := "functional-tests-in-scala"
+name := "ultimate-testing-framework"
 
 lazy val commonSettings = Seq(
   version := "0.1",
@@ -21,7 +21,7 @@ lazy val versions = new {
   val Scalatra = "2.5.1"
 }
 
-lazy val `functional-tests-in-scala` = (project in file("."))
+lazy val `ultimate-testing-framework` = (project in file("."))
   .aggregate(`commons`)
   .aggregate(`commons-api`)
   .aggregate(`commons-mock`)
