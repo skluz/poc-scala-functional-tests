@@ -8,7 +8,7 @@ import com.jayway.jsonpath.{DocumentContext, JsonPath}
 class JsonWrapper(obj: Any) {
 
   private lazy val parser = JSONParser.default
-  private lazy val document: DocumentContext = JsonPath.parse(asJsonString())
+  private lazy val document: DocumentContext = JsonPath.parse(parser.toJSON(obj))
 
   def setField(path: String, value: Any): JsonWrapper = {
     document.set(path, value)
@@ -25,6 +25,6 @@ class JsonWrapper(obj: Any) {
     this
   }
 
-  def asJsonString(): String = parser.toJSON(obj)
+  def asJsonString(): String = document.jsonString()
 
 }

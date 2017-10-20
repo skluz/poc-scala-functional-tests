@@ -54,13 +54,13 @@ object HttpClient extends LazyLogging {
       this
     }
 
-    def queryParam(name: String, value: Any): Builder = {
-      queryParams += name -> value
+    def pathParam(name: String, value: Option[_]): Builder = {
+      if(value.isDefined) pathParams += name -> value.get
       this
     }
 
-    def queryParam(name: String, value: Option[_]): Builder = {
-      if(value.isDefined) queryParams += name -> value.get
+    def queryParam(name: String, value: Any): Builder = {
+      queryParams += name -> value
       this
     }
 

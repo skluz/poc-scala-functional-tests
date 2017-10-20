@@ -8,7 +8,7 @@ import com.funtis.petstore.mock.state.PetStore
 /**
   * Created by Sławomir Kluz on 13/10/2017.
   */
-object MockRunner extends BaseMockRunner {
+object PetStoreMockRunner extends BaseMockRunner {
 
   override val interface: String = MockConfig.interface
   override val port: Int = MockConfig.port

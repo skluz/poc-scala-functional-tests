@@ -11,3 +11,11 @@ case class Pet(
   tags: Seq[Tag],
   status: Status.StatusType
 )
+
+case class PetInput(
+  category: Long,
+  name: String,
+  photoUrls: Seq[String],
+  tags: Seq[Long],
+  status: String
+)

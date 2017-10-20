@@ -1,13 +1,14 @@
 package com.funtis.commons.test
 
 import com.typesafe.scalalogging.LazyLogging
-import org.scalatest.{BeforeAndAfterAll, FlatSpec, Outcome}
+import org.scalatest.concurrent.Eventually
+import org.scalatest._
 import org.slf4j.MDC
 
 /**
   * Created by Sławomir Kluz on 12/08/2017.
   */
-abstract class BaseSuite extends FlatSpec with LazyLogging with BeforeAndAfterAll {
+abstract class BaseSuite extends FlatSpec with LazyLogging with BeforeAndAfterAll with Matchers with Eventually with Inside with GivenWhenThen {
 
   override def beforeAll(): Unit = {
     super.beforeAll()

@@ -2,7 +2,7 @@ package com.funtis.petstore.mock.state
 
 import com.funtis.commons.mock.servlet.MockState
 import com.funtis.commons.random.Randomizer
-import com.funtis.petstore.mock.model.{Category, Pet, Status, Tag}
+import com.funtis.petstore.mock.model._
 
 import scala.collection.mutable
 import scala.util.Random
@@ -10,13 +10,25 @@ import scala.util.Random
 /**
   * Created by Sławomir Kluz on 13/10/2017.
   */
-case class PetStore(pets: mutable.Buffer[Pet]) extends MockState
+case class PetStore(pets: mutable.Buffer[Pet], tags: mutable.Buffer[Tag], categories: mutable.Buffer[Category]) extends MockState {
+
+  def addPet(input: PetInput): Pet = {
+    val fullCategory = categories.find(c => c.id == input.category).get
+    val fullTags = input.tags.map(tId => tags.find(t => t.id == tId).get)
+    val id = pets.maxBy(p => p.id).id + 1
+    val status = Status.withName(input.status)
+    val pet = Pet(id, fullCategory, input.name, input.photoUrls, fullTags, status)
+    pets += pet
+    pet
+  }
+
+}
 
 object PetStore {
 
   def fullStore(): PetStore = {
-    val categories = Category.someCategories()
-    val tags = Tag.someTags()
+    val categories = Category.someCategories().toBuffer
+    val tags = Tag.someTags().toBuffer
     val pets = (1 to Randomizer.Number.int(1, 20)).map(i => {
       val id = i
       val category = Random.shuffle(categories).head
@@ -30,11 +42,10 @@ object PetStore {
           "https://picsum.photos/300/200?image=6",
           "https://picsum.photos/300/200?image=7"
         )).take(Randomizer.Number.int(0, 7))
-      val randomTags = Random.shuffle(tags).take(Randomizer.Number.int(1, tags.size))
       val status = Status(Random.nextInt(Status.maxId))
-      Pet(id, category, Randomizer.String.petName(), photos, randomTags, status)
+      Pet(id, category, Randomizer.String.petName(), photos, tags, status)
     }).toBuffer
-    PetStore(pets)
+    PetStore(pets, tags, categories)
   }
 
 }

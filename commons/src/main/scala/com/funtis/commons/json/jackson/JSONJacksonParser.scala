@@ -1,6 +1,8 @@
 package com.funtis.commons.json.jackson
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include
+import com.fasterxml.jackson.core.PrettyPrinter
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
 import com.fasterxml.jackson.databind._
 import com.funtis.commons.json.JSONParser
 
@@ -11,6 +13,7 @@ import scala.reflect.{classTag, _}
   */
 class JSONJacksonParser extends JSONParser {
 
+  private val prettyWriter = new DefaultPrettyPrinter()
   private val mapper = new ObjectMapper()
   mapper.findAndRegisterModules()
 
@@ -28,6 +31,11 @@ class JSONJacksonParser extends JSONParser {
 
   override def toJSON(any: Any): String = {
     mapper.writeValueAsString(any)
+  }
+
+  override def toPrettyJSON(any: String): String = {
+    val anyValue = mapper.readValue(any, classOf[Any])
+    mapper.writer(prettyWriter).writeValueAsString(anyValue)
   }
 
   override def fromJSON[T](json: String, cls: Class[T]): T = {

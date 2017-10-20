@@ -9,6 +9,7 @@ import scala.reflect.ClassTag
 trait JSONParser {
 
   def toJSON(any: Any): String
+  def toPrettyJSON(any: String): String
 
   def fromJSON[T](json: String, cls: Class[T]): T
   def fromJSON[T](json: Array[Byte], cls: Class[T]): T

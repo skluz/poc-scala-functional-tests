@@ -1,7 +1,7 @@
 package com.funtis.petstore.mock.servlets
 
 import com.funtis.commons.mock.servlet.BaseServlet
-import com.funtis.petstore.mock.model.Status
+import com.funtis.petstore.mock.model.{PetInput, Status}
 import com.funtis.petstore.mock.state.PetStore
 import org.json4s.Serializer
 import org.json4s.ext.EnumNameSerializer
@@ -32,6 +32,15 @@ class PetServlet(store: PetStore) extends BaseServlet("/pet", store) {
         NoContent()
       }
       case None => NotFound(s"Pet id=${params("id")} not found")
+    }
+  }
+
+  post("/") {
+    try {
+      val input = parsedBody.extract[PetInput]
+      Created(store.addPet(input))
+    } catch {
+      case e: Throwable => BadRequest(e)
     }
   }
 

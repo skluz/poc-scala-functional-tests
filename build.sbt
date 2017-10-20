@@ -73,18 +73,18 @@ lazy val `commons-perf` = project
 lazy val `commons-web` = project
   .settings(commonSettings: _*)
   .settings(libraryDependencies ++= Seq(
-    "org.seleniumhq.selenium" % "selenium-chrome-driver" % versions.Selenium
+    "org.seleniumhq.selenium" % "selenium-java" % versions.Selenium
   ))
   .dependsOn(`commons` % "compile->compile;test->test")
 
 
 lazy val `petstore` = project
   .settings(commonSettings: _*)
-  .dependsOn(`commons` % "compile->compile;test->test")
+  .dependsOn(`commons-api` % "compile->compile;test->test")
 
 lazy val `petstore-api-tests` = project
   .settings(commonSettings: _*)
-  .dependsOn(`petstore`, `commons-api` % "compile->compile;test->test")
+  .dependsOn(`petstore` % "compile->compile;test->test")
 
 lazy val `petstore-mock` = project
   .settings(commonSettings: _*)
