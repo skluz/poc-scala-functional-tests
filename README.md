@@ -28,7 +28,7 @@
     * mark selected test like: `it should "test something" in taggedAs WIP { ... }`
     
 ##### Logging
-* `HttpClient` logs request and response default. In order to see raw request and responses (since Apache HttpClient adds some headers like Connection, User-Agent) refer to https://hc.apache.org/httpcomponents-client-4.5.x/logging.html 
+* `HttpClient` logs request and response default. In order to see raw request and responses (since Apache HttpClient adds some headers like Connection, User-Agent) refer to https://hc.apache.org/httpcomponents-client-4.5.x/logging.html
 
 ### ToDo
 - [ ] logging: logback.xml for api, web, perf - sbt + intellij
