@@ -7,9 +7,9 @@ import org.openqa.selenium.{By, JavascriptExecutor, SearchContext, WebElement}
   */
 class Element(by: By)(implicit context: SearchContext) extends WebContext {
 
-  def this(locator: Locator) = this(locator.by)
+  def this(locator: Locator)(implicit context: SearchContext) = this(locator.by)(context)
 
-  private def element: WebElement = context.findElement(by)
+  protected def element: WebElement = context.findElement(by)
 
   def location() = (element.getLocation.getX, element.getLocation.getY)
 
@@ -21,12 +21,7 @@ class Element(by: By)(implicit context: SearchContext) extends WebContext {
   }
 
   override def toString(): String = {
-    "%s (%s)".format(this.getClass.getSimpleName, by)
+    "%s[%s] (%s)".format(this.getClass.getSimpleName, context.getClass.getSimpleName, by)
   }
 
-}
-
-object Element {
-  def by(locator: Locator) = new Element(locator)
-  def by(by: By) = new Element(by)
 }
