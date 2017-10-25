@@ -11,9 +11,6 @@ import scala.reflect.ClassTag
   */
 trait WebContext extends LazyLogging {
 
-  protected def driver: WebDriver = DriverFactory.driver
-  implicit def context: SearchContext = driver
-
-  def $[T](name: String)(implicit ct: ClassTag[T]): T = implicitly[ClassTag[T]].runtimeClass.newInstance().asInstanceOf[T]
+  //override def toString(): String = "%s [root: %s]".format(this.getClass.getSimpleName, root.getClass.getSimpleName)
 
 }
