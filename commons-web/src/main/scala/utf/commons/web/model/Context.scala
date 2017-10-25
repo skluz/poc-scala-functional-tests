@@ -5,12 +5,12 @@ import org.openqa.selenium.SearchContext
 /**
   * Created by Sławomir Kluz on 24/10/2017.
   */
-trait RootContext {
+trait Context {
 
-  implicit protected def rootContext: SearchContext
+  implicit protected def context: SearchContext
 
   override def toString(): String = {
-    "%s [root: %s]".format(this.getClass.getSimpleName, rootContext.getClass.getSimpleName)
+    "%s [root: %s]".format(this.getClass.getSimpleName, context.getClass.getSimpleName)
   }
 
 }

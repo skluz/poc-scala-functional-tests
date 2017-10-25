@@ -11,10 +11,10 @@ class SomeTest extends BaseWebSuite {
     val mainPage = Google.open()
     logger.info(mainPage.toString())
     //val form = mainPage.form
-    logger.info(mainPage.nameInput.toString())
+    logger.info(mainPage.nameInput.toString)
     logger.info(mainPage.form.toString())
     logger.info(mainPage.form.nameInput.toString())
-    mainPage.nameInput.sendKeys("Hej!!!asdf asHej!!!asdf asHej!!!asdf asHej!!!asdf asHej!!!asdf asHej!!!asdf asHej!!!asdf asHej!!!asdf asHej!!!asdf asHej!!!asdf asHej!!!asdf as")
+    //mainPage.nameInput.sendKeys("Hej!!!asdf asHej!!!asdf asHej!!!asdf asHej!!!asdf asHej!!!asdf asHej!!!asdf asHej!!!asdf asHej!!!asdf asHej!!!asdf asHej!!!asdf asHej!!!asdf as")
 //    logger.info(form.subclass.toString())
 //    logger.info(form.subclass.nameInput.toString())
 //    form.subclass.nameInput.sendKeys("Hello!")

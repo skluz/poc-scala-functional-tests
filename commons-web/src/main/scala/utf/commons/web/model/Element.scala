@@ -5,12 +5,15 @@ import org.openqa.selenium.{SearchContext, WebElement}
 /**
   * Created by Sławomir Kluz on 19/10/2017.
   */
-class Element(locator: Locator)(implicit searchContext: SearchContext) {
+abstract class Element(locator: Locator)(implicit context: SearchContext) {
 
-  protected def webElement: WebElement = searchContext.findElement(locator.by)
+  protected def webElement: WebElement = context.findElement(locator.by)
+  def asList() = {
+    println(this.getClass.getSimpleName)
+  }
 
   override def toString(): String = {
-    "%s [root: %s, %s]".format(this.getClass.getSimpleName, searchContext.getClass.getSimpleName, locator.by)
+    "%s [context: %s, %s]".format(this.getClass.getSimpleName, context.getClass.getSimpleName, locator.by)
   }
 
 }

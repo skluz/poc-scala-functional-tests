@@ -5,14 +5,14 @@ import org.openqa.selenium.{By, JavascriptExecutor, SearchContext, WebElement}
 /**
   * Created by Sławomir Kluz on 19/10/2017.
   */
-class Component(locator: Locator)(implicit var searchContext: SearchContext) extends RootContext {
+abstract class Component(locator: Locator)(implicit var context: SearchContext) {
 
-  override implicit protected def rootContext: SearchContext = searchContext.findElement(locator.by)
-  protected def webElement: WebElement = searchContext.findElement(locator.by)
-  searchContext = webElement
+  protected def webElement: WebElement = context.findElement(locator.by)
+  private val originalContext = context
+  context = webElement
 
   override def toString(): String = {
-    "%s [root: %s, %s]".format(this.getClass.getSimpleName, searchContext.getClass.getSimpleName, locator.by)
+    "%s [context: %s, %s]".format(this.getClass.getSimpleName, originalContext.getClass.getSimpleName, locator.by)
   }
 
 }
